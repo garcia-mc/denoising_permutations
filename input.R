@@ -20,7 +20,7 @@ kol=load.image("kolmogorov.png")
 
 map.rotation60 <- function(x,y){
   angle=pi/3
-  return (list(x=cos(angle)*x -sin(angle)*y+1458,y=sin(angle)*x+ cos(angle)*y))
+  return (list(x=cos(angle)*x -sin(angle)*y,y=sin(angle)*x+ cos(angle)*y))
 
 }
 
