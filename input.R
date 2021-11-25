@@ -8,21 +8,48 @@ x
 image <- image_data(x, channels = "Gray")
 image <- as.integer(image, transpose = TRUE)
 image <- drop(image)
-corners <- image_detect_corners(image, threshold = 30)
+corners <- image_detect_corners(image, threshold = 25)
 plt <- image_draw(x)
 points(corners$x, image_info(x)$height - corners$y, col = "red", pch = 20, lwd = 0.5)
 dev.off()
 plt
 
+covariates=data.frame(xcoord=corners$x,ycoord=(image_info(x)$height - corners$y))
+n=nrow(covariates)
+
 library(imager)
 
 kol=load.image("kolmogorov.png")
 
-map.rotation60 <- function(x,y){
-  angle=pi/3
+map.rotation <- function(x,y){
+  angle=pi/4
   return (list(x=cos(angle)*x -sin(angle)*y,y=sin(angle)*x+ cos(angle)*y))
 
 }
+
+orig_response=as.data.frame(map.rotation(covariates$xcoord,covariates$ycoord))
+
+response=orig_response[sample(1:n,n),]
+
+plot(covariates,xlim=c(-2000,2000),ylim=c(0,2000))
+points(response,col='blue')
+
+UY=svd(response, nu = 2, nv = 2)[[2]]
+UYorig=svd(orig_response, nu = 2, nv = 2)[[2]]
+
+UA=svd(as.matrix(covariates), nu = 2, nv = 2)[[2]]
+
+lY=apply(UY,1,function (x) sum(x^2))
+lYorig=apply(UYorig,1,function (x) sum(x^2))
+
+lA=apply(UA,1,function (x) sum(x^2))
+
+plot(lY,lA)
+plot(lYorig,lA)
+
+factorial(1351)
+
+
 
 
 kol %>% plot
