@@ -29,10 +29,14 @@ map.rotation <- function(x,y){
 
 orig_response=as.data.frame(map.rotation(covariates$xcoord,covariates$ycoord))
 
-response=orig_response[sample(1:n,n),]
+unknown_perm=sample(1:n,n)
+response=orig_response[unknown_perm,]
 
 plot(covariates,xlim=c(-2000,2000),ylim=c(0,2000))
-points(response,col='blue')
+
+#######
+
+plot(response,col='blue',xlim=c(-2000,2000),ylim=c(0,2000))
 
 UY=svd(response, nu = 2, nv = 2)[[2]]
 UYorig=svd(orig_response, nu = 2, nv = 2)[[2]]
@@ -45,9 +49,31 @@ lYorig=apply(UYorig,1,function (x) sum(x^2))
 lA=apply(UA,1,function (x) sum(x^2))
 
 plot(lY,lA)
-plot(lYorig,lA)
 
-factorial(1351)
+
+
+ind_Y=order(lY)
+ind_A=order(lA)
+
+inverse=order(ind_Y)
+
+total=ind_A[inverse]
+
+plot(lY,lA[total])
+
+total
+unknown_perm
+
+
+
+
+
+
+
+
+
+
+
 
 
 
